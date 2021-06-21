@@ -121,18 +121,29 @@ if __name__ == "__main__":
     filelist = os.listdir(in_files[0])
     filename = filelist[0].split('_')[0]
     numfiles = len(filelist)
+    max=0
+    min=10000000000
 
     for i in range(numfiles):
         fn = filename + '_' + str(i) + '.png'
         logging.info("\nPredicting image {} ...".format(fn))
 
         img = Image.open(os.path.join(in_files[0], fn))
-
+        count = 0
         mask = predict_img(net=net,
                            full_img=img,
                            scale_factor=args.scale,
                            out_threshold=args.mask_threshold,
                            device=device)
+        for i in range (mask.shape[0]): 
+            for j in range (mask.shape[1]): 
+                if mask[i][j]:
+                           count = count+1
+        if count>max:
+               max = count
+        if count<min:
+               min = count
+
 
         if not args.no_save:
             os.makedirs('./out/', exist_ok=True) 
@@ -155,6 +166,9 @@ if __name__ == "__main__":
             plot_img_and_mask(img, mask)
 
     video = cv2.VideoWriter(filename + '_over.avi',cv2.VideoWriter_fourcc(*'mp4v'), args.fps, (112,112))
+    sol = ((max-min)/max)*100
+    print("Ejection Fraction is:")
+    print(sol)
  
     for i in range(len(vidimages)):
        video.write(vidimages[i])
