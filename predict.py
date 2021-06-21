@@ -167,7 +167,7 @@ if __name__ == "__main__":
 
     video = cv2.VideoWriter(filename + '_over.avi',cv2.VideoWriter_fourcc(*'mp4v'), args.fps, (112,112))
     sol = ((max-min)/max)*100
-    print("Ejection Fraction is:")
+    #print("Ejection Fraction is:")
     print(sol)
  
     for i in range(len(vidimages)):
